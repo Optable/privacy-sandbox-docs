@@ -2,8 +2,11 @@
 
 Optable supports exclusively on-device bidding activities and doesn't rely on [sequential auctions](https://developers.google.com/privacy-sandbox/relevance/protected-audience-api/sequential-auction-setup)
 
-## Identification
-Optable is identified as https://ads.optable.co as interest group owner.
+## Minimum Requirements
+- [Enroll](https://developer.chrome.com/blog/announce-enrollment-privacy-sandbox/) for the Protected Audience API.
+- Update its SSP server to generate auctionConfigs with https://ads.optable.co in `interestGroupBuyers[]`.
+- Implement the requirements as an SSP to [runAdAuction()](https://developers.google.com/privacy-sandbox/relevance/protected-audience-api/ad-auction) directly, or through a multi-seller setup (eg: Prebid.js with [fledgeForGPT module](https://docs.prebid.org/dev-docs/modules/fledgeForGpt.html)).
+- Pass the [expected auction signals](#expected-auction-signals) by our bidding-logic.
 
 ## Provided Ad Metadata for scoreAd
 Optable bid with currency https://wicg.github.io/turtledove/#bid-with-currency USD in CPM.
