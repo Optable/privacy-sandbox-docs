@@ -1,20 +1,19 @@
 # Optable Protected Audience integration with SSPs
 
-Optable supports exclusively on-device bidding activities and doesn't rely sequential auctions.
-https://developers.google.com/privacy-sandbox/relevance/protected-audience-api/sequential-auction-setup
+Optable supports exclusively on-device bidding activities and doesn't rely on [sequential auctions](https://developers.google.com/privacy-sandbox/relevance/protected-audience-api/sequential-auction-setup)
 
 ## Identification
-Optable is identified as "https://ads.optable.co" as interest group owner.
+Optable is identified as https://ads.optable.co as interest group owner.
 
-## Provided Bidding Signals
+## Provided Ad Metadata for scoreAd
 Optable bid with currency https://wicg.github.io/turtledove/#bid-with-currency USD in CPM.
 
 Optable intent to support at the minimum the latest stable version of the IAB Tech Lab driven bidder guidelines.
-As it is currently being specified, it is best described by this proposal from DV360 https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit#heading=h.4pamn58w7gl
+As it is currently being specified, it is best described by this [specification](https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit#heading=h.4pamn58w7gl)
 
-The following protobuf schema represents the fields that will always be set in Optable ad metadata:
+The following schema represents the fields that will always be set in Optable ad metadata:
 
-```
+```protobuf
 message AdMetadata {
   // The currency of the bid as ISO-4217 alpha codes, always 'USD' when coming from Optable.
   string cur = 1;
@@ -56,8 +55,8 @@ message AdMetadata {
 ```
 
 ### Event reporting
-Optable's creatives will always opt-in automatic beacons on "reserved.top_navigation" (then "reserved.top_navigation_start" once widely available) and share them with "direct-seller".
-A `view` event is also shared with "direct-seller" when the ad's document have fully been executed in the fenced-frame.
+Optable's creatives will always opt-in automatic beacons on "reserved.top_navigation" (then "reserved.top_navigation_start" once widely available) and share them with `direct-seller`.
+A `view` event is also shared with `direct-seller` when the ad's document have fully been executed in the fenced-frame.
 
 ### Creative Audits
 Creatives are immutable in Optable and should be identified by their renderURL. Any change on a creative result in a new renderURL.
@@ -69,7 +68,7 @@ Those audit APIs should expose the audit state to Optable so that Optable doesn'
 
 ## Expected Auction Signals
 Optable intent to support at the minimum the latest stable version of the IAB Tech Lab driven bidder guidelines.
-As suggested in https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit it is possible to communicate contextual data to Optable using auctionSignals to by populating it with a OpenRTB 2.5 bid request object https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf containing at the minimum a single `imp[]` with a `banner` object.
+As suggested in this [specification](https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit) it is possible to communicate contextual data to Optable using auctionConfig's `auctionSignals` by populating it with a [OpenRTB 2.5](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf) bid request object containing at the minimum a single `imp[]` with a `banner` object.
 
 It is only required, when creative size is not communicated through `auctionConfig.requestedSize` as documented below.
 
