@@ -57,11 +57,23 @@ message AdMetadata {
 Note that Optable's [bid-with-currency](https://wicg.github.io/turtledove/#bid-with-currency) is USD in CPM.
 
 ## Expected Auction Signals
-As suggested in this [specification](https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit) it is possible to communicate contextual data to Optable using the `auctionConfig` `auctionSignals` by populating it with an [OpenRTB 2.5](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf).
+As suggested in this [specification](https://docs.google.com/document/d/1LOfkk2asw1S6NZs0hBAzmU1V8t8GXu_2hfAkSVvn9AM/edit) it is possible to communicate contextual data to Optable using the `auctionConfig`'s `auctionSignals`.
+
+Optable will look for an [OpenRTB 2 BidRequest (3.2.1) Object](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf) in the following locations in order:
+    - `perBuyerSignals.ortb2`
+    - `auctionSignals.ortb2`
+    - `auctionSignals.prebid.ortb2`
+    - `auctionSignals`
+
+Optable will also look for a [OpenRTB 2 Banner Imp (3.2.4) Object](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf) in the following locations in order:
+    - `perBuyerSignals.ortb2Imp`
+    - `auctionSignals.ortb2Imp`
+    - `auctionSignals.prebid.ortb2Imp`
+    - `{ortb2}.imp[0]`
 
 ### Creative size
-Optable will consider both the `auctionConfig`'s `requestedSize` and `auctionSignals.imp[0].banner` restrictions when provided.
-At least one of those should be specified for Optable to bid at all.
+Optable will bid with creatives matching any of the `auctionConfig.requestedSize`, `ortb2Imp.banner` and `ortb2Imp.banner.format[]` restrictions when provided.
+At least one size must be specified for Optable to bid at all.
 
 ## Creative Audits
 Creatives are immutable in Optable and should be identified by their `renderURL`. Any change on a creative result in a new `renderURL`.
@@ -80,5 +92,5 @@ Initial integrations with SSPs are exposing the whole inventory as a single sell
 At the minimum the SSP `auctionConfig.seller` seller identifier should be shared with Optable.
 
 Exposing segmented (eg: publisher level) SSP inventory can be done on a per-SSP basis by sharing mapping tables either manually or programatically of `publisher ID -> name`.
-The publisher ID will be matched against `auctionSignals.site.publisher.id` field when present.
-When it isn't present or doesn't match the inventory, the bid request will be assumed and reported to be on the *catchall* inventory for that seller.
+The publisher ID will be matched against `{ortb2}.site.publisher.id` field when present.
+When it isn't present or doesn't match the inventory, the bid request will be assumed and reported to be on the *catchall* inventory for that seller if any.
